@@ -1,0 +1,43 @@
+@import "../../styles/variables";
+
+.taskBox {
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  transition: transform 0.2s ease-in-out;
+  color: $white-color;
+  // Mobile-first padding
+  padding: 1rem;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 0.5rem;
+  }
+
+  p {
+    margin-bottom: 0;
+    opacity: 0.9;
+  }
+
+  // Restore larger padding for tablets and up
+  @media (min-width: $breakpoint-tablet) {
+    padding: 1.5rem;
+  }
+}
+
+.priorityHigh {
+  background-color: $priority-high;
+}
+
+.priorityMedium {
+  background-color: $priority-medium;
+}
+
+.priorityLow {
+  background-color: $priority-low;
+}

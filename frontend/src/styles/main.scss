@@ -1,0 +1,15 @@
+@import "variables";
+
+body {
+  font-family: $main-font;
+  background-color: $background-color;
+  color: $medium-text-color;
+  margin: 0;
+  // Mobile-first padding
+  padding: 1rem;
+
+  // Increase padding for tablets and larger screens
+  @media (min-width: $breakpoint-tablet) {
+    padding: 2rem;
+  }
+}

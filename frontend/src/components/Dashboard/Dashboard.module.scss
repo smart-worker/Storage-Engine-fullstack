@@ -1,0 +1,170 @@
+@import "../../styles/variables";
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; // Align items to the start on mobile
+  margin-bottom: 2rem;
+  border-bottom: 2px solid $border-color;
+  padding-bottom: 1rem;
+  // Stack header items vertically on mobile
+  flex-direction: column;
+  gap: 1rem;
+
+  h1 {
+    // Reduce font size for smaller screens
+    font-size: 2rem;
+    color: $dark-text-color;
+  }
+
+  // Media query for screens larger than mobile
+  @media (min-width: $breakpoint-mobile) {
+    flex-direction: row;
+    align-items: center;
+
+    h1 {
+      // Restore original font size
+      font-size: $header-font-size;
+    }
+  }
+}
+
+.addTaskBtn {
+  background-color: $primary-color;
+  color: $white-color;
+  border: none;
+  padding: 12px 24px;
+  font-size: $base-font-size;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: background-color $transition-speed ease;
+  width: 100%; // Make button full-width on mobile
+
+  &:hover {
+    background-color: $primary-hover-color;
+  }
+
+  @media (min-width: $breakpoint-mobile) {
+    width: auto; // Revert to auto-width on larger screens
+  }
+}
+
+.tasksContainer {
+  display: grid;
+  gap: 1.5rem;
+  // Default to a single column for mobile devices
+  grid-template-columns: 1fr;
+
+  // Use a responsive grid for tablets and larger screens
+  @media (min-width: $breakpoint-mobile) {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem; // Add padding to avoid touching screen edges
+}
+
+.modalContent {
+  background: $white-color;
+  padding: 1.5rem; // Reduced padding for mobile
+  border-radius: $modal-border-radius;
+  width: 100%; // Use full width available
+  max-width: 500px;
+  box-shadow: $modal-shadow;
+
+  h2 {
+    margin-top: 0;
+    color: $dark-text-color;
+  }
+
+  @media (min-width: $breakpoint-mobile) {
+    padding: 2rem; // Restore original padding
+  }
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: $light-text-color;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: $base-font-size;
+    box-sizing: border-box;
+  }
+}
+
+.modalActions {
+  display: flex;
+  margin-top: 2rem;
+  // Stack buttons on small screens
+  flex-direction: column;
+  gap: 0.5rem;
+
+  @media (min-width: $breakpoint-mobile) {
+    // Side-by-side on larger screens
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+}
+
+.modalBtn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: $base-font-size;
+  font-weight: 600;
+  width: 100%; // Make buttons full-width
+
+  @media (min-width: $breakpoint-mobile) {
+    width: auto;
+  }
+}
+
+.saveBtn {
+  background-color: $success-color;
+  color: $white-color;
+  // Ensure cancel button appears first when stacked
+  order: 1;
+
+  @media (min-width: $breakpoint-mobile) {
+    order: 2;
+  }
+}
+
+.cancelBtn {
+  background-color: $light-gray-color;
+  color: $medium-text-color;
+  order: 2;
+
+  @media (min-width: $breakpoint-mobile) {
+    order: 1;
+  }
+}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BACK_PORT, LAN_IP } from "./constants";
 import "./App.scss";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 const BACKEND_URL = `http://${LAN_IP}:${BACK_PORT}/`;
 
@@ -26,37 +27,8 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <h1>Key-Value Store</h1>
-
-      <div className="form-group">
-        <input
-          className="input"
-          placeholder="Key"
-          value={key}
-          onChange={(e) => setKey(e.target.value)}
-        />
-        <input
-          className="input"
-          placeholder="Value"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-        <button className="button" onClick={handleSet}>
-          Set
-        </button>
-      </div>
-
-      <div className="form-group">
-        <button className="button" onClick={handleGet}>
-          Get
-        </button>
-        {fetchedValue && (
-          <p className="result">
-            Fetched Value: <strong>{fetchedValue}</strong>
-          </p>
-        )}
-      </div>
+    <div className="App">
+      <Dashboard />
     </div>
   );
 }
