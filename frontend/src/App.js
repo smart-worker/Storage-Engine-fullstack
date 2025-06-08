@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { BACK_PORT, LAN_IP } from "./constants";
 import "./App.scss";
+
+const BACKEND_URL = `http://${LAN_IP}:${BACK_PORT}/`;
 
 function App() {
   const [key, setKey] = useState("");
@@ -7,7 +10,7 @@ function App() {
   const [fetchedValue, setFetchedValue] = useState("");
 
   const handleSet = async () => {
-    const response = await fetch("http://localhost:3001/set", {
+    const response = await fetch(BACKEND_URL + "set", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ key, value }),
@@ -17,7 +20,7 @@ function App() {
   };
 
   const handleGet = async () => {
-    const response = await fetch(`http://localhost:3001/get/${key}`);
+    const response = await fetch(`${BACKEND_URL}get/${key}`);
     const result = await response.json();
     setFetchedValue(result.value ?? "Not found");
   };

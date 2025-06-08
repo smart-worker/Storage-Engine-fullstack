@@ -1,14 +1,28 @@
-const express = require("express");
-const cors = require("cors");
-const Redis = require("ioredis");
+import "dotenv/config";
+
+import { FRONT_PORT, LAN_IP, BACK_PORT, DB_PORT } from "./constants.js";
+
+import express from "express";
+import cors from "cors";
+import Redis from "ioredis";
 
 const app = express();
 
+const corsOptions = {
+  origin: [
+    `http://localhost:${FRONT_PORT}`, // For local development
+    `http://${LAN_IP}:${FRONT_PORT}`, // Your Mac's LAN IP
+    `http://${LAN_IP}:${BACK_PORT}`, // Backend URL (if needed)
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
 // Enable CORS for all origins (you can restrict it if needed)
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
-const redis = new Redis({ host: "localhost", port: 9002 });
+const redis = new Redis({ host: LAN_IP, port: DB_PORT });
 
 app.post("/set", async (req, res) => {
   const { key, value } = req.body;
@@ -29,6 +43,6 @@ app.get("/get/:key", async (req, res) => {
   }
 });
 
-app.listen(3001, () => {
-  console.log("Server running on http://localhost:3001");
+app.listen(BACK_PORT, "0.0.0.0", () => {
+  console.log("Server ON");
 });
