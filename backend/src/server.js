@@ -43,6 +43,22 @@ app.get("/get/:key", async (req, res) => {
   }
 });
 
+app.get("/getAll", async (req, res) => {
+  try {
+    const flatPairs = await redis.call("getall");
+    const keyValuePairs = [];
+    for (let i = 0; i < flatPairs.length; i += 2) {
+      const key = flatPairs[i];
+      const value = flatPairs[i + 1];
+      keyValuePairs.push({ key, value });
+    }
+
+    res.json(keyValuePairs);
+  } catch (err) {
+    res.status(500).json({ status: "error", message: err.message });
+  }
+});
+
 app.listen(BACK_PORT, "0.0.0.0", () => {
   console.log("Server ON");
 });
