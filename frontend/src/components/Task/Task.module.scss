@@ -5,18 +5,24 @@
   box-shadow: $box-shadow;
   transition: transform 0.2s ease-in-out;
   color: $white-color;
-  // Mobile-first padding
-  padding: 1rem;
+  // Use flexbox to separate content and footer
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   &:hover {
     transform: translateY(-5px);
   }
+}
+
+.taskContent {
+  padding: 1rem;
 
   h3 {
     margin-top: 0;
     margin-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   }
 
   p {
@@ -24,9 +30,34 @@
     opacity: 0.9;
   }
 
-  // Restore larger padding for tablets and up
   @media (min-width: $breakpoint-tablet) {
     padding: 1.5rem;
+  }
+}
+
+.taskFooter {
+  padding: 0.75rem 1rem; // Use horizontal padding from content
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.1); // Slightly darker footer
+
+  label {
+    font-size: 0.9rem;
+    cursor: pointer;
+    user-select: none; // Prevent text selection on click
+  }
+
+  input[type="checkbox"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (min-width: $breakpoint-tablet) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
 

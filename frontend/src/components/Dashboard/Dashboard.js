@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Task from "../Task/Task";
 import styles from "./Dashboard.module.scss";
 import { encryptTask, decryptTask } from "../../utils/crypto";
+import EmptyState from "../EmptyState/EmptyState";
 
 const Dashboard = ({ backend_url }) => {
   const [tasks, setTasks] = useState([]);
@@ -18,13 +19,17 @@ const Dashboard = ({ backend_url }) => {
   };
 
   const handleSet = async (key, value) => {
-    const response = await fetch(backend_url + "set", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key, value }),
-    });
-    const result = await response.json();
-    alert(`Set result: ${result.status}`);
+    try {
+      const response = await fetch(backend_url + "set", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, value }),
+      });
+      const result = await response.json();
+      alert(`Set result: ${result.status}`);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleSaveTask = () => {
@@ -32,28 +37,43 @@ const Dashboard = ({ backend_url }) => {
       alert("Title is required.");
       return;
     }
-    const taskId = Date.now().toString();
-    const encryptedTask = encryptTask(newTask);
+    try {
+      const taskId = Date.now().toString();
+      const encryptedTask = encryptTask(newTask);
 
-    if (encryptedTask) {
-      handleSet(taskId, encryptedTask);
-      setTasks((prevTasks) => [...prevTasks, { key: taskId, ...newTask }]);
+      if (encryptedTask) {
+        handleSet(taskId, encryptedTask);
+        setTasks((prevTasks) => [...prevTasks, { key: taskId, ...newTask }]);
+      }
+
+      setIsModalOpen(false);
+      setNewTask({ title: "", description: "", priority: "low" });
+    } catch (e) {
+      console.log(e);
     }
-
-    setIsModalOpen(false);
-    setNewTask({ title: "", description: "", priority: "low" });
   };
 
   const fetchAllTasks = async () => {
-    const response = await fetch(backend_url + "getAll");
-    const result = await response.json();
-    let fetchedTasks = [];
-    result.forEach(({ key, value }) => {
-      if (value)
-        fetchedTasks = [...fetchedTasks, { key, ...decryptTask(value) }];
-      // if (value) console.log(decryptTask(value));
-    });
-    setTasks(fetchedTasks);
+    try {
+      const response = await fetch(backend_url + "getAll");
+      const result = await response.json();
+      let fetchedTasks = [];
+      result.forEach(({ key, value }) => {
+        if (value)
+          fetchedTasks = [...fetchedTasks, { key, ...decryptTask(value) }];
+      });
+      setTasks(fetchedTasks);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      setTasks((prevTasks) => prevTasks.filter((t) => t.key !== taskId));
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -73,10 +93,20 @@ const Dashboard = ({ backend_url }) => {
       </header>
 
       <div className={styles.tasksContainer}>
-        {tasks.map((task) => {
-          if (!task) return null; // Fails gracefully if decryption fails
-          return <Task key={task.key} task={task} />;
-        })}
+        {tasks.length > 0 ? (
+          tasks.map((task) => {
+            if (!task) return null; // Fails gracefully if decryption fails
+            return (
+              <Task
+                key={task.key}
+                task={task}
+                handleDeleteTask={(t) => handleDeleteTask(t)}
+              />
+            );
+          })
+        ) : (
+          <EmptyState />
+        )}
       </div>
 
       {isModalOpen && (

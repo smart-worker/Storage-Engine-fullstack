@@ -1,0 +1,32 @@
+@import "../../styles/variables";
+
+.emptyState {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #7f8c8d; // A softer color for the text
+  width: 100%;
+  grid-column: 1 / -1;
+
+  .imageContainer {
+    max-width: 150px;
+    margin: 0 auto 2rem auto;
+    opacity: 0.6;
+  }
+
+  .emptyStateImage {
+    color: $primary-color; // Use the primary color for the SVG stroke
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    color: $dark-text-color;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}

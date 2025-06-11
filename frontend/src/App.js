@@ -1,6 +1,5 @@
 // import { useState } from "react";
 import { BACK_PORT, LAN_IP } from "./constants";
-import "./App.scss";
 import Dashboard from "./components/Dashboard/Dashboard";
 
 const BACKEND_URL = `http://${LAN_IP}:${BACK_PORT}/`;
