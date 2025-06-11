@@ -28,7 +28,7 @@ app.post("/set", async (req, res) => {
   const { key, value } = req.body;
   try {
     await redis.set(key, value);
-    res.json({ status: "ok" });
+    res.status(201).json({ status: "ok" });
   } catch (err) {
     res.status(500).json({ status: "error", message: err.message });
   }
@@ -37,7 +37,7 @@ app.post("/set", async (req, res) => {
 app.get("/get/:key", async (req, res) => {
   try {
     const value = await redis.get(req.params.key);
-    res.json({ key: req.params.key, value });
+    res.status(200).json({ key: req.params.key, value });
   } catch (err) {
     res.status(500).json({ status: "error", message: err.message });
   }
@@ -53,7 +53,16 @@ app.get("/getAll", async (req, res) => {
       keyValuePairs.push({ key, value });
     }
 
-    res.json(keyValuePairs);
+    res.status(200).json(keyValuePairs);
+  } catch (err) {
+    res.status(500).json({ status: "error", message: err.message });
+  }
+});
+
+app.delete("/delete/:taskId", async (req, res) => {
+  try {
+    await redis.del(req.params.taskId);
+    res.status(200).json({ status: "ok" });
   } catch (err) {
     res.status(500).json({ status: "error", message: err.message });
   }

@@ -71,6 +71,11 @@ const Dashboard = ({ backend_url }) => {
   const handleDeleteTask = async (taskId) => {
     try {
       setTasks((prevTasks) => prevTasks.filter((t) => t.key !== taskId));
+      const response = await fetch(`${backend_url}delete/${taskId}`, {
+        method: "DELETE",
+      });
+      const result = await response.json();
+      if (result?.status === "ok") alert("Huuraaay! One task less.");
     } catch (e) {
       console.log(e);
     }
