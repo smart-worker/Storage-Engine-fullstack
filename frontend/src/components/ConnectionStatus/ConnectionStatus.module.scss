@@ -1,0 +1,59 @@
+.indicator {
+  display: flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap; // Prevents text from wrapping
+
+  .dot {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    transition: background-color 0.3s ease;
+  }
+}
+
+// Green for connected
+.open {
+  background-color: #e6f7ed;
+  color: #0b8043;
+  .dot {
+    background-color: #34c759;
+  }
+}
+
+// Yellow for connecting
+.connecting {
+  background-color: #fffbe6;
+  color: #d46b08;
+  .dot {
+    background-color: #ffcc00;
+    animation: pulse 1.5s infinite;
+  }
+}
+
+// Red for disconnected/closed
+.closed {
+  background-color: #fff1f0;
+  color: #cf1322;
+  .dot {
+    background-color: #ff3b30;
+  }
+}
+
+// Pulsing animation for the connecting dot
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}

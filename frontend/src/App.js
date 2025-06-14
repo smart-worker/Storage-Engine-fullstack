@@ -3,6 +3,7 @@ import { BACK_PORT, LAN_IP } from "./constants";
 import Dashboard from "./components/Dashboard/Dashboard";
 
 const BACKEND_URL = `http://${LAN_IP}:${BACK_PORT}/`;
+const WEBSOCKET_URL = `ws://${LAN_IP}:${BACK_PORT}`;
 
 function App() {
   // const [key, setKey] = useState("");
@@ -27,7 +28,7 @@ function App() {
 
   return (
     <div className="App">
-      <Dashboard backend_url={BACKEND_URL} />
+      <Dashboard backend_url={BACKEND_URL} socket_url={WEBSOCKET_URL} />
     </div>
   );
 }

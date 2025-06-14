@@ -34,23 +34,25 @@
   }
 }
 
+.headerControls {
+  display: flex;
+  align-items: center;
+  gap: 16px; // Creates space between the status indicator and the button
+}
+
 .addTaskBtn {
-  background-color: $primary-color;
-  color: $white-color;
+  // Your existing button styles
+  background-color: #007bff;
+  color: white;
   border: none;
-  padding: 12px 24px;
-  font-size: $base-font-size;
-  border-radius: $border-radius;
+  padding: 10px 20px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color $transition-speed ease;
-  width: 100%; // Make button full-width on mobile
+  font-weight: bold;
+  transition: background-color 0.2s;
 
   &:hover {
-    background-color: $primary-hover-color;
-  }
-
-  @media (min-width: $breakpoint-mobile) {
-    width: auto; // Revert to auto-width on larger screens
+    background-color: #0056b3;
   }
 }
 

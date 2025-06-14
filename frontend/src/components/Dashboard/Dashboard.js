@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import useWebSocket from "react-use-websocket";
+
 import Task from "../Task/Task";
 import styles from "./Dashboard.module.scss";
 import { encryptTask, decryptTask } from "../../utils/crypto";
 import EmptyState from "../EmptyState/EmptyState";
+import ConnectionStatusIndicator from "../ConnectionStatus/ConnectionStatus";
 
-const Dashboard = ({ backend_url }) => {
+const Dashboard = ({ backend_url, socket_url }) => {
   const [tasks, setTasks] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({
@@ -88,13 +91,31 @@ const Dashboard = ({ backend_url }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  // websocket handling
+
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socket_url, {
+    onOpen: () => {
+      console.log("✅ WebSocket connection established.");
+    },
+    shouldReconnect: (closeEvent) => true, // Will attempt to reconnect on all close events
+  });
+
+  useEffect(() => {
+    if (lastMessage !== null) {
+      fetchAllTasks();
+    }
+  }, [lastMessage]);
+
   return (
     <div className={styles.dashboard}>
       <header className={styles.dashboardHeader}>
         <h1>Task Manager</h1>
-        <button onClick={openModal} className={styles.addTaskBtn}>
-          Add New Task
-        </button>
+        <div className={styles.headerControls}>
+          <ConnectionStatusIndicator readyState={readyState} />
+          <button onClick={openModal} className={styles.addTaskBtn}>
+            Add New Task
+          </button>
+        </div>
       </header>
 
       <div className={styles.tasksContainer}>

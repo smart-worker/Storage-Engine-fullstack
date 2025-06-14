@@ -1,7 +1,8 @@
 import "dotenv/config";
 
 import { FRONT_PORT, LAN_IP, BACK_PORT, DB_PORT } from "./constants.js";
-
+import { WebSocketServer } from "ws";
+import http from "http";
 import express from "express";
 import cors from "cors";
 import Redis from "ioredis";
@@ -22,7 +23,61 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+const server = http.createServer(app);
+
 const redis = new Redis({ host: LAN_IP, port: DB_PORT });
+const subscriber = new Redis({
+  host: LAN_IP,
+  port: DB_PORT,
+  connectTimeout: 10000,
+});
+redis.on("error", (err) => console.error("[Publisher] Redis Error:", err));
+subscriber.on("error", (err) =>
+  console.error("[Subscriber] Redis Error:", err)
+);
+const socketChannelName = "db_changes";
+
+const wss = new WebSocketServer({ server }); // Attach WebSocket server to the HTTP server
+
+// A Set to keep track of all connected clients
+const clients = new Set();
+
+wss.on("connection", (ws) => {
+  console.log("✅ Frontend client connected via WebSocket");
+  clients.add(ws);
+
+  ws.on("close", () => {
+    console.log("❌ Frontend client disconnected");
+    clients.delete(ws);
+  });
+});
+
+// Helper function to broadcast a message to all connected clients
+function broadcast(message) {
+  for (const client of clients) {
+    if (client.readyState === client.OPEN) {
+      // Check if the connection is open
+      client.send(message);
+    }
+  }
+}
+console.log("🔌 WebSocket server initialized.");
+
+subscriber.subscribe(socketChannelName, (err, count) => {
+  if (err) {
+    console.error("❌ Failed to subscribe:", err);
+    return;
+  } else {
+    console.log(`✅ Subscribed to ${count} channel(s). Waiting for updates...`);
+  }
+});
+
+subscriber.on("message", (channel, message) => {
+  console.log(`📨 Message from Redis [${channel}]: ${message}`);
+
+  // Handle the DB update message here
+  broadcast("fetchall");
+});
 
 app.post("/set", async (req, res) => {
   const { key, value } = req.body;
@@ -68,6 +123,6 @@ app.delete("/delete/:taskId", async (req, res) => {
   }
 });
 
-app.listen(BACK_PORT, "0.0.0.0", () => {
+server.listen(BACK_PORT, "0.0.0.0", () => {
   console.log("Server ON");
 });
